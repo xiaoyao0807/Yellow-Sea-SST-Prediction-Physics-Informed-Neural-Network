@@ -23,7 +23,6 @@
 - [Data Source](#data-source)
 - [Reproducibility Checklist & Troubleshooting](#reproducibility-checklist--troubleshooting)
 - [Acknowledgments & Citation](#acknowledgments--citation)
-- [Future Work](#future-work)
 
 ---
 
@@ -223,17 +222,3 @@ Detailed extraction instructions:
 **Satellite Data Citation**
 
 Kurihara, Y. (2020). *GCOM-C/SGLI Sea Surface Temperature (SST) Algorithm Theoretical Basis Document (ATBD), Version 2*. JAXA.
-
-**Suggested Project Citation**
-
-`[Your Name]. Yellow Sea SST Prediction Using Physics-Informed Neural Network [D]. [Your University], 2026.`
-
----
-
-## Future Work
-
-- Multi-variable input extension (wind speed, salinity, sea surface height anomaly)
-- Seasonal/monthly stratified evaluation reports
-- Dockerized deployment and one-command startup
-- Baseline comparisons (LSTM / Transformer / LightGBM)
-- Prediction interval output (not only point-confidence scores)
