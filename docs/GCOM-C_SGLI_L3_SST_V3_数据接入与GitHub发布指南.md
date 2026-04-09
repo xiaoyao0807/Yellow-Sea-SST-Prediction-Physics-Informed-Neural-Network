@@ -144,38 +144,7 @@ py web_app_real_data.py
 
 ---
 
-## 5. 上传 GitHub 时应怎么做
-
-### 5.1 不要提交的内容
-
-仓库根目录 **`.gitignore`** 已忽略常见敏感与大体积项，包括：
-
-- `data/*.csv`、原始卫星数据目录  
-- `models/*.pth`、`results/`、`plots/`、`logs/`  
-- 虚拟环境、`.env`  
-- Earth Engine / GCP **服务账号密钥**（`*credentials*.json` 等）  
-
-**切勿**将 `EE_PROJECT` 对应的密钥 JSON 或 `earthengine` 令牌文件提交到公开仓库。
-
-### 5.2 建议提交的内容
-
-- 全部 **源代码**（含 `sgli_l3_sst_extract_gee.py`、`config.py`、训练与 Web）。  
-- 本文档 **`docs/GCOM-C_SGLI_L3_SST_V3_数据接入与GitHub发布指南.md`**。  
-- 可选：在 **`README.md`** 中加一节「数据获取」，链接到本文档，并写明：  
-  - 数据由使用者本地运行脚本生成；  
-  - 遵守 JAXA / Earth Engine 使用条款与署名要求。  
-
-### 5.3 协作者如何复现
-
-1. Clone 仓库；  
-2. `pip install -r requirements.txt`；  
-3. `earthengine authenticate` 并设置 `EE_PROJECT`；  
-4. 运行 `py sgli_l3_sst_extract_gee.py ...` 生成本地 CSV；  
-5. `py training.py` → `py web_app_real_data.py`。  
-
----
-
-## 6. 常见问题
+## 5. 常见问题
 
 **Q：提取很慢或超时？**  
 减小 `--chunk-days`（例如 30），或缩短 `--start`/`--end` 区间分段运行后再用 pandas 合并 CSV。
@@ -188,7 +157,7 @@ py web_app_real_data.py
 
 ---
 
-## 7. 一键命令小结（Earth Engine 路径）
+## 6. 一键命令小结（Earth Engine 路径）
 
 ```powershell
 $env:EE_PROJECT = "你的项目ID"
