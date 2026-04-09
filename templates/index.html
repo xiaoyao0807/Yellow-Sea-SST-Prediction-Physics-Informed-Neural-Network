@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>黄海海水温度预测系统 - PINN模型</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-water"></i>
+                <span>黄海温度预测</span>
+            </div>
+            <div class="nav-menu">
+                <a href="#home" class="nav-link active">首页</a>
+                <a href="#prediction" class="nav-link">预测</a>
+                <a href="#analysis" class="nav-link">分析</a>
+                <a href="#about" class="nav-link">关于</a>
+            </div>
+            <div class="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main class="main-content">
+        <!-- 首页部分 -->
+        <section id="home" class="section active">
+            <div class="hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        <i class="fas fa-thermometer-half"></i>
+                        黄海海水温度预测系统
+                    </h1>
+                    <p class="hero-subtitle">
+                        基于物理信息神经网络(PINN)的智能预测平台
+                    </p>
+                    <div class="hero-features">
+                        <div class="feature-card">
+                            <i class="fas fa-brain"></i>
+                            <h3>AI驱动</h3>
+                            <p>物理信息神经网络</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-satellite"></i>
+                            <h3>卫星数据</h3>
+                            <p>Google Earth Engine</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-chart-line"></i>
+                            <h3>精准预测</h3>
+                            <p>1-90天温度预测</p>
+                        </div>
+                    </div>
+                    <button class="cta-button" onclick="showSection('prediction')">
+                        <i class="fas fa-play"></i>
+                        开始预测
+                    </button>
+                </div>
+                <div class="hero-visual">
+                    <div class="temperature-gauge">
+                        <div class="gauge-circle">
+                            
+                            <div class="gauge-text">
+                                <span id="currentTemp">15.2</span>°C
+                            </div>
+                        </div>
+                        <p class="gauge-label">当前海水温度</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 预测部分 -->
+        <section id="prediction" class="section">
+            <div class="container">
+                <h2 class="section-title">
+                    <i class="fas fa-crystal-ball"></i>
+                    海水温度预测
+                </h2>
+                
+                <div class="prediction-controls">
+                    <div class="control-group">
+                        <label for="predictionDays">预测天数</label>
+                        <select id="predictionDays" class="form-control">
+                            <option value="7">7天</option>
+                            <option value="14">14天</option>
+                            <option value="30" selected>30天</option>
+                            <option value="60">60天</option>
+                            <option value="90">90天</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="makePrediction()">
+                        <i class="fas fa-magic"></i>
+                        开始预测
+                    </button>
+                </div>
+
+                <div class="prediction-results" id="predictionResults" style="display: none;">
+                    <div class="results-header">
+                        <h3>预测结果</h3>
+                        <div class="model-info">
+                            <i class="fas fa-info-circle"></i>
+                            <span id="modelType">Physics-Informed Neural Network (PINN)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="predictionChart"></canvas>
+                    </div>
+                    
+                    <div class="prediction-table">
+                        <table id="predictionTable">
+                            <thead>
+                                <tr>
+                                    <th>日期</th>
+                                    <th>预测温度</th>
+                                    <th>置信度</th>
+                                    <th>状态</th>
+                                </tr>
+                            </thead>
+                            <tbody id="predictionTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 分析部分 -->
+        <section id="analysis" class="section">
+            <div class="container">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-bar"></i>
+                    数据分析
+                </h2>
+                
+                <div class="analysis-grid">
+                    <div class="analysis-card">
+                        <h3>历史趋势</h3>
+                        <div class="chart-container">
+                            <canvas id="historicalChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="analysis-card">
+                        <h3>季节性分析</h3>
+                        <div class="chart-container">
+                            <canvas id="seasonalChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="analysis-card">
+                        <h3>统计信息</h3>
+                        <div class="stats-grid" id="statsGrid">
+                            <!-- 统计信息将通过JavaScript动态加载 -->
+                        </div>
+                    </div>
+                    
+                    <div class="analysis-card">
+                        <h3>模型性能</h3>
+                        <div class="performance-metrics" id="performanceMetrics">
+                            <!-- 性能指标将通过JavaScript动态加载 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 关于部分 -->
+        <section id="about" class="section">
+            <div class="container">
+                <h2 class="section-title">
+                    <i class="fas fa-info-circle"></i>
+                    关于系统
+                </h2>
+                
+                <div class="about-content">
+                    <div class="about-text">
+                        <h3>系统介绍</h3>
+                        <p>
+                            本系统使用物理信息神经网络(PINNs)技术，专门用于预测中韩之间黄海区域的海水温度变化。
+                            系统结合了Google Earth Engine的卫星数据和先进的机器学习算法，能够提供高精度的温度预测。
+                        </p>
+                        
+                        <h3>技术特点</h3>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> 物理约束确保预测合理性</li>
+                            <li><i class="fas fa-check"></i> 季节性模式自动识别</li>
+                            <li><i class="fas fa-check"></i> 多时间尺度预测支持</li>
+                            <li><i class="fas fa-check"></i> 实时数据更新</li>
+                            <li><i class="fas fa-check"></i> 可视化分析界面</li>
+                        </ul>
+                        
+                        <h3>预测能力</h3>
+                        <div class="capability-grid">
+                            <div class="capability-item">
+                                <h4>短期预测</h4>
+                                <p>1-7天</p>
+                                <span class="accuracy">RMSE < 1°C</span>
+                            </div>
+                            <div class="capability-item">
+                                <h4>中期预测</h4>
+                                <p>1-4周</p>
+                                <span class="accuracy">RMSE < 2°C</span>
+                            </div>
+                            <div class="capability-item">
+                                <h4>长期预测</h4>
+                                <p>1-3个月</p>
+                                <span class="accuracy">RMSE < 3°C</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="about-visual">
+                        <div class="model-architecture">
+                            <h3>模型架构</h3>
+                            <div class="architecture-diagram">
+                                <div class="arch-layer">
+                                    <span>输入层</span>
+                                    <small>多维特征向量</small>
+                                </div>
+                                <div class="arch-arrow">↓</div>
+                                <div class="arch-layer">
+                                    <span>隐藏层</span>
+                                    <small>[128, 128, 64, 32]</small>
+                                </div>
+                                <div class="arch-arrow">↓</div>
+                                <div class="arch-layer">
+                                    <span>物理约束</span>
+                                    <small>温度范围、季节性、平滑性</small>
+                                </div>
+                                <div class="arch-arrow">↓</div>
+                                <div class="arch-layer">
+                                    <span>输出层</span>
+                                    <small>温度预测</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 加载指示器 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>正在处理中...</p>
+        </div>
+    </div>
+
+    <!-- 通知消息 -->
+    <div class="notification" id="notification">
+        <div class="notification-content">
+            <i class="fas fa-info-circle"></i>
+            <span id="notificationText"></span>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

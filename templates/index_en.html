@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yellow Sea SST Prediction System - PINN Model</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-water"></i>
+                <span>Yellow Sea Temperature</span>
+            </div>
+            <div class="nav-menu">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#prediction" class="nav-link">Prediction</a>
+                <a href="#analysis" class="nav-link">Analysis</a>
+                <a href="#about" class="nav-link">About</a>
+            </div>
+            <div class="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Home Section -->
+        <section id="home" class="section active">
+            <div class="hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        <i class="fas fa-thermometer-half"></i>
+                        Yellow Sea SST Prediction System
+                    </h1>
+                    <p class="hero-subtitle">
+                        AI-driven prediction platform based on Physics-Informed Neural Networks (PINN)
+                    </p>
+                    <div class="hero-features">
+                        <div class="feature-card">
+                            <i class="fas fa-brain"></i>
+                            <h3>AI-Powered</h3>
+                            <p>Physics-Informed Neural Networks</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-satellite"></i>
+                            <h3>Satellite Data</h3>
+                            <p>Google Earth Engine</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-chart-line"></i>
+                            <h3>Accurate Prediction</h3>
+                            <p>1-90 day temperature forecast</p>
+                        </div>
+                    </div>
+                    <button class="cta-button" onclick="showSection('prediction')">
+                        <i class="fas fa-play"></i>
+                        Start Prediction
+                    </button>
+                </div>
+                <div class="hero-visual">
+                    <div class="temperature-gauge">
+                        <div class="gauge-circle">
+                            
+                            <div class="gauge-text">
+                                <span id="currentTemp">15.2</span>°C
+                            </div>
+                        </div>
+                        <p class="gauge-label">Current Sea Temperature</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Prediction Section -->
+        <section id="prediction" class="section">
+            <div class="container">
+                <h2 class="section-title">
+                    <i class="fas fa-crystal-ball"></i>
+                    Sea Temperature Prediction
+                </h2>
+                
+                <div class="prediction-controls">
+                    <div class="control-group">
+                        <label for="predictionDays">Prediction Days</label>
+                        <select id="predictionDays" class="form-control">
+                            <option value="7">7 days</option>
+                            <option value="14">14 days</option>
+                            <option value="30" selected>30 days</option>
+                            <option value="60">60 days</option>
+                            <option value="90">90 days</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="makePrediction()">
+                        <i class="fas fa-magic"></i>
+                        Predict Temperature
+                    </button>
+                </div>
+
+                <div class="prediction-results" id="predictionResults" style="display: none;">
+                    <div class="results-header">
+                        <h3>Prediction Results</h3>
+                        <div class="model-info">
+                            <i class="fas fa-info-circle"></i>
+                            <span id="modelType">Physics-Informed Neural Network (PINN)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="predictionChart"></canvas>
+                    </div>
+                    
+                    <div class="prediction-table">
+                        <table id="predictionTable">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Predicted Temperature</th>
+                                    <th>Confidence</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="predictionTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analysis Section -->
+        <section id="analysis" class="section">
+            <div class="container">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-bar"></i>
+                    Data Analysis
+                </h2>
+                
+                <div class="analysis-grid">
+                    <div class="analysis-card">
+                        <h3>Historical Trends</h3>
+                        <div class="chart-container">
+                            <canvas id="historicalChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="analysis-card">
+                        <h3>Seasonal Analysis</h3>
+                        <div class="chart-container">
+                            <canvas id="seasonalChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="analysis-card">
+                        <h3>Statistical Information</h3>
+                        <div class="stats-grid" id="statsGrid">
+                            <!-- Statistics loaded dynamically by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div class="analysis-card">
+                        <h3>Model Performance</h3>
+                        <div class="performance-metrics" id="performanceMetrics">
+                            <!-- Performance metrics loaded dynamically by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section">
+            <div class="container">
+                <h2 class="section-title">
+                    <i class="fas fa-info-circle"></i>
+                    About the System
+                </h2>
+                
+                <div class="about-content">
+                    <div class="about-text">
+                        <h3>System Introduction</h3>
+                        <p>
+                            This system uses Physics-Informed Neural Networks (PINNs) technology 
+                            to predict sea temperature changes in the Yellow Sea between China and Korea. 
+                            The system combines satellite data from Google Earth Engine with advanced 
+                            machine learning algorithms to provide high-precision temperature predictions.
+                        </p>
+                        
+                        <h3>Technical Features</h3>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Physics constraints ensure prediction reasonableness</li>
+                            <li><i class="fas fa-check"></i> Automatic seasonal pattern recognition</li>
+                            <li><i class="fas fa-check"></i> Multi-scale prediction support</li>
+                            <li><i class="fas fa-check"></i> Real-time data updates</li>
+                            <li><i class="fas fa-check"></i> Visual analysis interface</li>
+                        </ul>
+                        
+                        <h3>Prediction Capability</h3>
+                        <div class="capability-grid">
+                            <div class="capability-item">
+                                <h4>Short-term</h4>
+                                <p>1-7 days</p>
+                                <span class="accuracy">RMSE < 1°C</span>
+                            </div>
+                            <div class="capability-item">
+                                <h4>Medium-term</h4>
+                                <p>1-4 weeks</p>
+                                <span class="accuracy">RMSE < 2°C</span>
+                            </div>
+                            <div class="capability-item">
+                                <h4>Long-term</h4>
+                                <p>1-3 months</p>
+                                <span class="accuracy">RMSE < 3°C</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="about-visual">
+                        <div class="model-architecture">
+                            <h3>Model Architecture</h3>
+                            <div class="architecture-diagram">
+                                <div class="arch-layer">
+                                    <span>Input Layer</span>
+                                    <small>Multi-dimensional feature vectors</small>
+                                </div>
+                                <div class="arch-arrow">↓</div>
+                                <div class="arch-layer">
+                                    <span>Hidden Layers</span>
+                                    <small>[128, 128, 64, 32]</small>
+                                </div>
+                                <div class="arch-arrow">↓</div>
+                                <div class="arch-layer">
+                                    <span>Physics Constraints</span>
+                                    <small>Temperature range, seasonality, smoothness</small>
+                                </div>
+                                <div class="arch-arrow">↓</div>
+                                <div class="arch-layer">
+                                    <span>Output Layer</span>
+                                    <small>Temperature prediction</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Processing...</p>
+        </div>
+    </div>
+
+    <!-- Notification Message -->
+    <div class="notification" id="notification">
+        <div class="notification-content">
+            <i class="fas fa-info-circle"></i>
+            <span id="notificationText"></span>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
