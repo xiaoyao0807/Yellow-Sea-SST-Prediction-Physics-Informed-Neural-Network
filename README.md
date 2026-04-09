@@ -119,6 +119,7 @@ API Endpoints
 Flask-based JSON API for frontend and secondary integration.
 
 Endpoint	Method	Description	Example
+
 /api/health	GET	Service health & data coverage	/api/health
 /api/data/historical	GET	Historical data (optional days parameter)	/api/data/historical?days=180
 /api/data/statistics	GET	Statistical metrics (mean, extremes, seasonal)	/api/data/statistics
