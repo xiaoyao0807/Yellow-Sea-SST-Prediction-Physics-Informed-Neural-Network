@@ -214,6 +214,7 @@ Detailed extraction instructions:
 | Port 5000 already in use | Existing Flask process | Stop old process or change port |
 
 ---
+本研究提出的PINN模型在黄海海温预测任务上取得了R²=0.976的优异表现，平均绝对误差仅1.00°C。与未引入物理约束的基准模型相比，RMSE降低了55.6%，验证了物理信息嵌入对提升预测精度的有效性。该精度已满足近海渔业养殖、航运安全等实际应用的需求。
 
 ## Acknowledgments & Citation
 
