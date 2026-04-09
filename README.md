@@ -1,5 +1,7 @@
 # Yellow Sea SST Prediction using Physics-Informed Neural Network (PINN)
 
+基于 **物理信息神经网络（PINN）** 和 **JAXA GCOM-C/SGLI L3 卫星数据** 的黄海海表温度预测系统。
+
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.8%2B-green.svg)]()
 
