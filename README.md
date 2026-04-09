@@ -83,13 +83,16 @@ Dense(64) → Tanh → Dense(32) → Tanh → Output (1, SST)
 
 ---
 Physics Constraints
+
 Constraint	Formulation	Physical Meaning
+
 Temperature Range	Penalize predictions ∉ [-3, 31] °C	Physically reasonable SST range for Yellow Sea
 Seasonal Cycle	Enforce correlation(pred, cos(DOY)) > -0.3	Capture winter-cold, summer-warm annual pattern
 Temporal Smoothness	Minimize ||pred - 2·lag₁ + lag₂||²	Suppress "acceleration" of temperature change
 Thermal Inertia	Enforce |pred - lag₁| ≤ 2 °C/day	Ocean mixed layer has large heat capacity
 
 Training Strategy
+
 Optimizer: Adam (lr = 0.001)
 
 Scheduler: ReduceLROnPlateau (factor = 0.5, patience = 20)
@@ -101,6 +104,7 @@ Gradient Clipping: max_norm = 1.0
 Physics Warm-up: Linear increase of physics loss weight during first 30 epochs
 
 Experimental Results
+
 Evaluation on train/test split using 2995 days of data (2018–2026):
 
 Metric	Value
@@ -111,6 +115,7 @@ MAPE	20.05%
 Forecast Horizon	1 – 90 days
 
 API Endpoints
+
 Flask-based JSON API for frontend and secondary integration.
 
 Endpoint	Method	Description	Example
@@ -120,6 +125,7 @@ Endpoint	Method	Description	Example
 /api/predict	GET	Future forecast (days=1~90)	/api/predict?days=30
 /api/model_info	GET	Model & physics constraint description	/api/model_info
 ---
+
 Project Structure
 
 ├── config.py                    # Global configuration (model, physics, paths)
@@ -143,6 +149,7 @@ Project Structure
 
 
 Data Source
+
 Primary Product: JAXA GCOM-C/SGLI L3 Sea Surface Temperature (V3)
 
 Resolution & Frequency: ~4.6 km, daily
@@ -156,7 +163,9 @@ Access Platform: Google Earth Engine (JAXA/GCOM-C/L3/OCEAN/SST/V3)
 Original data provided by Japan Aerospace Exploration Agency (JAXA). See docs/GCOM-C_SGLI_L3_SST_V3_数据接入与GitHub发布指南.md for detailed extraction steps.
 
 Reproducibility Checklist & Troubleshooting
+
 Reproducibility Checklist
+
 To ensure local results match the description, follow this order:
 
 1.data/sgli_yellow_sea_sst_daily.csv exists with complete date coverage
@@ -170,13 +179,16 @@ To ensure local results match the description, follow this order:
 5.All pages in browser load charts correctly
 
 Troubleshooting
+
 Issue	Common Cause	Solution
 Training error: data file not found	CSV not in data/ directory	Verify path data/sgli_yellow_sea_sst_daily.csv
 Sudden drop in metrics	Poor new data quality or short time span	Re-export data, ensure sufficient samples after valid_pixels filtering
 Web starts but charts empty	API request failure or frontend cache	Refresh page, check browser console, visit /api/health
 GEE export fails	Task not run or quota exceeded	Re-run task in GEE Tasks panel, shorten export time range
 Port 5000 already in use	Another Flask process running	Kill existing process or change port before restart
+
 Acknowledgments & Citation
+
 JAXA — GCOM-C/SGLI L3 SST V3 satellite data product
 
 Google Earth Engine — Cloud-based data extraction platform
@@ -192,6 +204,7 @@ Project Citation (Suggested):
 [Your Name]. Yellow Sea SST Prediction Using Physics-Informed Neural Network[D]. [Your University], 2026.
 
 Future Work
+
 Multi-variable input (wind speed, salinity, sea surface height anomaly)
 
 Seasonal/monthly stratified evaluation reports
